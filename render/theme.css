@@ -1,0 +1,350 @@
+/* Identidad visual unica para los dos documentos.
+   Paleta y proporciones muestreadas del one-pager de referencia.
+   Nota: wkhtmltopdf usa un WebKit viejo, sin flexbox ni grid.
+   Todo el layout se resuelve con table/inline-block/float. */
+
+@page { margin: 0; }
+
+:root {}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
+  color: #3A3A38;
+  font-family: "Carlito", "Calibri", "Liberation Sans", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.55;
+  -webkit-print-color-adjust: exact;
+}
+
+.sheet {
+  background: #F7F6F2;
+  padding: 0 0 26px 0;
+}
+
+/* ---------- tipografia ---------- */
+
+.serif {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+}
+
+.eyebrow {
+  font-size: 8pt;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #AB8A69;
+  margin: 0 0 6px 0;
+}
+
+h1.doc-title {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 27pt;
+  font-weight: normal;
+  color: #FFFFFF;
+  margin: 0 0 6px 0;
+  line-height: 1.14;
+}
+
+h2.section {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 17pt;
+  font-weight: normal;
+  color: #13304E;
+  margin: 0 0 12px 0;
+  line-height: 1.24;
+}
+
+h3.block-title {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 13pt;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-weight: normal;
+  color: #13304E;
+  margin: 0 0 4px 0;
+}
+
+.lead { font-size: 10.5pt; color: #4A4A47; margin: 0 0 14px 0; }
+.muted { color: #7C7A73; }
+.small { font-size: 8.5pt; }
+.tiny  { font-size: 7.6pt; }
+
+/* ---------- header ---------- */
+
+.header {
+  background: #13304E;
+  padding: 26px 34px 22px 34px;
+  border-bottom: 3px solid #AB8A69;
+}
+
+.header .sub {
+  color: #C8D2DE;
+  font-size: 10pt;
+  margin: 0;
+}
+
+.header .rule {
+  border-top: 1px solid rgba(255,255,255,0.22);
+  margin: 16px 0 14px 0;
+}
+
+.badge-box {
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 8px 14px;
+  margin-right: 18px;
+}
+
+.badge-box .rating {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 19pt;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.badge-box .rating-sub {
+  font-size: 7.2pt;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #9FB0C4;
+  margin-top: 4px;
+}
+
+.pill {
+  display: inline-block;
+  background: #436554;
+  color: #FFFFFF;
+  font-size: 7.6pt;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  margin: 0 18px 0 0;
+  vertical-align: 3px;
+}
+.pill.warn { background: #AF8D4E; }
+.pill.risk { background: #A0592B; }
+
+.header-meta {
+  display: inline-block;
+  vertical-align: middle;
+  color: #B9C6D4;
+  font-size: 8.8pt;
+}
+
+.header-kpis { margin-top: 16px; width: 100%; border-collapse: collapse; }
+.header-kpis td {
+  border-left: 1px solid rgba(255,255,255,0.2);
+  padding: 2px 0 2px 14px;
+  vertical-align: top;
+}
+.header-kpis td:first-child { border-left: 0; padding-left: 0; }
+.header-kpis .k {
+  font-size: 7.4pt; letter-spacing: 1.1px; text-transform: uppercase;
+  color: #8FA3B8; margin-bottom: 3px;
+}
+.header-kpis .v {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 15pt; color: #FFFFFF; line-height: 1.1;
+}
+.header-kpis .v.up   { color: #7FBE9B; }
+.header-kpis .v.down { color: #E09A76; }
+
+/* ---------- cuerpo ---------- */
+
+.body { padding: 22px 34px 0 34px; }
+
+.thesis-para { margin: 0 0 14px 0; text-align: justify; }
+
+.num {
+  display: inline-block;
+  width: 17px; height: 17px; line-height: 16px;
+  border: 1px solid #AB8A69;
+  border-radius: 50%;
+  color: #AB8A69;
+  font-size: 7.4pt;
+  font-weight: bold;
+  text-align: center;
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+/* ---------- caja de grafico ---------- */
+
+.figure {
+  background: #FFFFFF;
+  border: 1px solid #E6E3DA;
+  border-left: 3px solid #AB8A69;
+  padding: 14px 18px 12px 18px;
+  margin: 0 0 18px 0;
+}
+
+.figure .fig-title {
+  font-size: 10pt;
+  font-weight: bold;
+  color: #13304E;
+  margin: 0 0 8px 0;
+}
+
+.figure .fig-body { text-align: center; }
+.figure .fig-body svg { max-width: 100%; height: auto; }
+
+.figure .caption {
+  font-size: 8.6pt;
+  color: #7C7A73;
+  text-align: center;
+  margin: 6px 0 0 0;
+}
+
+.figure .ref {
+  font-size: 7.6pt;
+  font-style: italic;
+  color: #9A988F;
+  text-align: center;
+  margin: 4px 0 0 0;
+}
+
+/* ---------- stat cards ---------- */
+
+.stats { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin: 4px 0 6px 0; }
+.stats td {
+  background: #FAF9F6;
+  border: 1px solid #E6E3DA;
+  padding: 11px 8px;
+  text-align: center;
+  vertical-align: middle;
+  width: 33%;
+}
+.stats .big {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 19pt;
+  color: #AF8D4E;
+  line-height: 1.05;
+}
+.stats .big.navy { color: #13304E; }
+.stats .lbl { font-size: 8.2pt; color: #6E6C66; margin-top: 3px; }
+.stats .sublbl { font-size: 7.4pt; color: #9A988F; }
+
+/* ---------- listas fortalezas / riesgos ---------- */
+
+.list-head {
+  font-size: 8.4pt; letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: bold; margin: 18px 0 0 0; padding-bottom: 5px;
+  border-bottom: 1px solid #AB8A69;
+}
+.list-head.pos  { color: #436554; }
+.list-head.neg  { color: #A0592B; }
+
+ul.points { list-style: none; margin: 0; padding: 0; }
+ul.points li {
+  padding: 7px 0 7px 18px;
+  border-bottom: 1px dashed #DCD9D0;
+  font-size: 10pt;
+}
+ul.points li:last-child { border-bottom: 0; }
+
+/* ---------- tablas ---------- */
+
+.kv { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.kv td { padding: 6px 0; border-bottom: 1px dashed #DCD9D0; font-size: 9.6pt; }
+.kv td.k { color: #7C7A73; }
+.kv td.v { text-align: right; font-weight: bold; color: #13304E; }
+
+table.data { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 9pt; }
+table.data thead th {
+  background: #13304E; color: #FFFFFF; font-weight: bold;
+  padding: 8px 7px; text-align: center; font-size: 8.6pt;
+}
+table.data thead th:first-child { text-align: left; }
+table.data thead th .th-sub {
+  display: block; font-weight: normal; font-size: 7.2pt;
+  letter-spacing: 0.7px; text-transform: uppercase; color: #9FB0C4; margin-top: 2px;
+}
+table.data tbody td {
+  padding: 7px; border-bottom: 1px solid #EAE8E1; text-align: center; color: #4A4A47;
+}
+table.data tbody td:first-child { text-align: left; color: #7C7A73; }
+table.data tbody tr.highlight td {
+  background: #FAF4E6; font-weight: bold; color: #13304E;
+}
+table.data tbody tr.self td {
+  background: #F2F5F8; font-weight: bold; color: #13304E;
+}
+table.data tbody tr.self td:first-child { color: #13304E; }
+
+/* ---------- callout ---------- */
+
+.callout {
+  background: #13304E;
+  color: #FFFFFF;
+  padding: 12px 18px;
+  margin: 10px 0 0 0;
+}
+.callout .big {
+  font-family: "Bitstream Charter", "Charter", "Liberation Serif", Georgia, serif;
+  font-size: 18pt;
+  color: #C6A87C;
+  margin-right: 10px;
+}
+.callout .txt { font-size: 9pt; color: #D8E0E9; }
+
+/* ---------- pie ---------- */
+
+.disclaimer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #E0DDD4;
+  font-size: 7.4pt;
+  line-height: 1.5;
+  color: #8A8880;
+  text-align: justify;
+}
+
+.signoff { margin-top: 14px; font-size: 9pt; }
+.signoff .name { font-weight: bold; color: #13304E; }
+
+.footnote { font-size: 7.6pt; font-style: italic; color: #9A988F; margin-top: 6px; }
+
+.spacer { height: 8px; }
+
+/* ---------- informe largo ---------- */
+
+.page-break { page-break-after: always; }
+.avoid-break { page-break-inside: avoid; }
+
+.report-body { padding: 30pt 40px 10pt 40px; }
+.report-body h2.section { margin-top: 4px; }
+
+.two-col { overflow: hidden; }
+.two-col .main {
+  float: left;
+  width: calc(100% - 224px);
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+.two-col .side {
+  float: right;
+  width: 208px;
+  border-left: 1px solid #E6E3DA;
+  padding-left: 16px;
+  box-sizing: border-box;
+}
+.full-width .main { width: 100%; padding-right: 0; }
+
+.side-box { margin-bottom: 14px; }
+.side-box .sb-title {
+  background: #13304E; color: #FFFFFF; font-size: 8.4pt; font-weight: bold;
+  letter-spacing: 0.8px; padding: 4px 8px; margin-bottom: 6px;
+}
+.side-box .sb-body { font-size: 8.6pt; }
+.side-box .sb-body svg { max-width: 100%; height: auto; }
+.side-box .src { font-size: 7pt; font-style: italic; color: #9A988F; margin-top: 3px; }
+
+.running-foot {
+  border-top: 1px solid #AB8A69;
+  margin-top: 18px; padding-top: 6px;
+  font-size: 7.8pt; color: #7C7A73;
+}

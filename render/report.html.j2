@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>{{ d.company.name }} — Informe de análisis</title>
+<style>
+{{ css }}
+</style>
+</head>
+<body>
+
+{# ---------- portada ---------- #}
+<div class="header" style="padding:150pt 40px 40px 40px; height:640pt;">
+  <p class="eyebrow">{{ d.header.eyebrow }}</p>
+  <h1 class="doc-title" style="font-size:38pt;">{{ d.company.name }}</h1>
+  <p class="sub" style="font-size:12pt;">{{ d.header.tagline }}</p>
+
+  <div class="rule" style="margin:28px 0 22px 0;"></div>
+
+  <div class="badge-box">
+    <div class="rating">{{ d.call.rating }}</div>
+    <div class="rating-sub">{{ d.call.rating_sub }}</div>
+  </div>
+  {% if d.call.pill %}<span class="pill {{ d.call.pill_class }}">{{ d.call.pill }}</span>{% endif %}
+
+  <table class="header-kpis" style="margin-top:34px;">
+    <tr>
+      {% for k in d.header.kpis %}
+      <td><div class="k">{{ k.label }}</div><div class="v {{ k.tone }}">{{ k.value }}</div></td>
+      {% endfor %}
+    </tr>
+  </table>
+
+  {% if d.header.toc %}
+  <div style="margin-top:56px;">
+    <p class="k" style="color:#8FA3B8; margin-bottom:10px;">Contenido</p>
+    <table style="width:100%; border-collapse:collapse;">
+      {% for t in d.header.toc %}
+      <tr>
+        <td style="color:#DCE4EC; font-size:9.5pt; padding:3px 0; border-bottom:1px dotted rgba(255,255,255,0.18);">{{ t.name }}</td>
+        <td style="color:#7C8FA6; font-size:9pt; padding:3px 0; text-align:right; border-bottom:1px dotted rgba(255,255,255,0.18); width:40px;">{{ t.page }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <p class="small" style="color:#8FA3B8; margin-top:30px;">{{ d.header.source_line }}</p>
+</div>
+<div class="page-break"></div>
+
+{# ---------- macro: un bloque de contenido dentro de la columna principal ---------- #}
+{% macro render_block(b) %}
+  {% if b.type == "subhead" %}
+    <h3 class="block-title" style="margin-top:16px;">{{ b.text }}</h3>
+
+  {% elif b.type == "text" %}
+    <p class="thesis-para">{{ b.text }}</p>
+
+  {% elif b.type == "stats" %}
+    <table class="stats" style="margin:6px 0 14px 0;">
+      <tr>
+        {% for s in b.cards %}
+        <td>
+          <div class="big {{ s.tone|default('') }}">{{ s.value }}</div>
+          <div class="lbl">{{ s.label }}</div>
+          {% if s.sub %}<div class="sublbl">{{ s.sub }}</div>{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+
+  {% elif b.type == "callout" %}
+    <div class="callout"><span class="big">{{ b.big }}</span><span class="txt">{{ b.text }}</span></div>
+
+  {% elif b.type == "bull_bear" %}
+    {% if b.bull %}
+    <div class="list-head pos">{{ b.bull_title|default('Fortalezas') }}</div>
+    <ul class="points">{% for p in b.bull %}<li>{{ p }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if b.bear %}
+    <div class="list-head neg">{{ b.bear_title|default('A vigilar') }}</div>
+    <ul class="points">{% for p in b.bear %}<li>{{ p }}</li>{% endfor %}</ul>
+    {% endif %}
+
+  {% elif b.type == "figure" %}
+    <div class="figure avoid-break" style="margin:10px 0 16px 0;">
+      <div class="fig-title">{{ b.title }}</div>
+      <div class="fig-body">{{ b.svg }}</div>
+      {% if b.caption %}<p class="caption">{{ b.caption }}</p>{% endif %}
+      {% if b.ref %}<p class="ref">{{ b.ref }}</p>{% endif %}
+    </div>
+
+  {% elif b.type == "figure_row" %}
+    <table style="width:100%; border-collapse:separate; border-spacing:10px 0; margin:10px 0 16px 0;">
+      <tr>
+        {% for f in b.figures %}
+        <td style="width:{{ (100/b.figures|length)|round|int }}%; vertical-align:top;">
+          <div class="figure avoid-break" style="margin:0;">
+            <div class="fig-title">{{ f.title }}</div>
+            <div class="fig-body">{{ f.svg }}</div>
+            {% if f.caption %}<p class="caption">{{ f.caption }}</p>{% endif %}
+          </div>
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+
+  {% elif b.type == "table" %}
+    <div class="avoid-break" style="margin:12px 0 6px 0;">
+      {% if b.title %}
+      <h3 class="block-title" style="margin-top:10px;">{{ b.title }}</h3>
+      <div style="border-top:1px solid #AB8A69;"></div>
+      {% endif %}
+      <table class="data">
+        <thead>
+          <tr>
+            <th></th>
+            {% for c in b.columns %}
+            <th>{{ c.name }}{% if c.sub %}<span class="th-sub">{{ c.sub }}</span>{% endif %}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in b.rows %}
+          <tr class="{{ row.cls|default('') }}">
+            <td>{{ row.label }}</td>
+            {% for v in row["cells"] %}<td>{{ v }}</td>{% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if b.note %}<p class="footnote">{{ b.note }}</p>{% endif %}
+    </div>
+
+  {% elif b.type == "kv" %}
+    <table class="kv" style="margin:8px 0 14px 0;">
+      {% for row in b.rows %}
+      <tr><td class="k">{{ row.k }}</td><td class="v">{{ row.v }}</td></tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+{% endmacro %}
+
+{# ---------- capitulos ---------- #}
+{% for sec in d.sections %}
+{% if sec.new_chapter and not loop.first %}<div class="page-break"></div>{% endif %}
+
+<div class="report-body">
+  <p class="eyebrow">{{ sec.eyebrow|default('') }}</p>
+  <h2 class="section" style="font-size:20pt;">{{ sec.title }}</h2>
+
+  {% if sec.sidebar %}
+  <div class="two-col">
+    <div class="main">
+      {% for b in sec.blocks %}{{ render_block(b) }}{% endfor %}
+    </div>
+    <div class="side">
+      {% for box in sec.sidebar %}
+      <div class="side-box avoid-break">
+        <div class="sb-title">{{ box.title }}</div>
+        <div class="sb-body">
+          {% if box.svg %}{{ box.svg }}{% endif %}
+          {% if box.kv %}
+          <table class="kv">
+            {% for row in box.kv %}
+            <tr><td class="k" style="font-size:8.4pt;">{{ row.k }}</td>
+                <td class="v" style="font-size:8.4pt;">{{ row.v }}</td></tr>
+            {% endfor %}
+          </table>
+          {% endif %}
+          {% if box.text %}<p style="font-size:8.6pt; margin:0;">{{ box.text }}</p>{% endif %}
+        </div>
+        {% if box.source %}<p class="src">{{ box.source }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="full-width">
+    <div class="main">
+      {% for b in sec.blocks %}{{ render_block(b) }}{% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="running-foot">{{ d.company.ticker }} · {{ sec.title }}</div>
+</div>
+
+{% endfor %}
+
+{# ---------- fuentes y disclaimer ---------- #}
+<div class="page-break"></div>
+<div class="report-body">
+  <p class="eyebrow">Apéndice</p>
+  <h2 class="section" style="font-size:20pt;">Fuentes y advertencias</h2>
+  <table class="kv">
+    {% for s in d.sources %}
+    <tr><td class="k">{{ s.k }}</td><td class="v" style="font-weight:normal; font-size:8.6pt;">{{ s.v }}</td></tr>
+    {% endfor %}
+  </table>
+  <div class="disclaimer">{{ d.disclaimer }}</div>
+  <div class="signoff">
+    <div class="name">{{ d.signoff.name }}</div>
+    <div class="muted">{{ d.signoff.line }}</div>
+  </div>
+</div>
+
+</body>
+</html>
