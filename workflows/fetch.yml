@@ -1,0 +1,74 @@
+name: fetch-ticker
+
+# Se dispara a mano desde la UI de GitHub o via API:
+#   POST /repos/{owner}/{repo}/actions/workflows/fetch.yml/dispatches
+#   {"ref":"main","inputs":{"ticker":"AAPL","peers":"MSFT,GOOGL"}}
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: "Ticker US (ej. AAPL)"
+        required: true
+        type: string
+      peers:
+        description: "Comparables separados por coma (opcional)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-${{ inputs.ticker }}
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Recolectar datos
+        id: collect
+        env:
+          # La SEC exige un User-Agent con contacto real.
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          python -m fetch.run "${{ inputs.ticker }}" \
+            --peers "${{ inputs.peers }}" \
+            --out data
+
+      - name: Commitear el snapshot
+        run: |
+          git config user.name  "equity-research-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "sin cambios"
+          else
+            git commit -m "data: ${{ inputs.ticker }} $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Resumen
+        run: |
+          {
+            echo "### Datos de ${{ inputs.ticker }}"
+            echo ""
+            echo "Archivo: \`${{ steps.collect.outputs.json_path }}\`"
+            echo "Bloques con error: ${{ steps.collect.outputs.failed_blocks }}"
+            echo ""
+            echo "URL cruda para leer desde Claude:"
+            echo "\`https://raw.githubusercontent.com/${{ github.repository }}/main/data/${{ inputs.ticker }}/latest.json\`"
+          } >> "$GITHUB_STEP_SUMMARY"
